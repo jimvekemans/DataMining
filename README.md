@@ -14,7 +14,7 @@ Een hypothetische data-pipeline beschrijven met uitgewerkte MapReduce implementa
 
 ## Dataset
 
-Voor deze individuele opdracht 'Data Mining' is er gekozen voor een dataset bestaande uit drie tabellen: users, books en ratings. In 2004 is gedurende vier weken data verzameld van gebruikers en gebruikerreviews op de website bookcrossing.com. Nadien is er op Amazon Web Services (AWS) informatie afgehaald over de boeken in de gebruikerreviews. Wanneer AWS geen informatie kon vinden over het boek in de review, werd de review uit de dataset verwijderd. Sinds december 2020 is de data beschikbaar in CSV-formaat op: kaggle.com/arashnic/book-recommendation-dataset (#download).
+Voor deze individuele opdracht 'Data Mining' is er gekozen voor een dataset bestaande uit drie tabellen: users, books en ratings. In 2004 is gedurende vier weken data verzameld van gebruikers en gebruikerreviews op de website bookcrossing.com. Nadien is er op Amazon Web Services (AWS) informatie afgehaald over de boeken in de gebruikerreviews. Wanneer AWS geen informatie kon vinden over het boek in de review, werd de review uit de dataset verwijderd. Sinds december 2020 is de data beschikbaar in CSV-formaat op: kaggle.com/arashnic/book-recommendation-dataset.
 
 ## Situering in big data pipeline
 
@@ -28,3 +28,24 @@ De website bookcrossing.com bevat een lijst van gebruikers die in een 'journal' 
 ![Bookcrossing_bookreview](Bookcrossing_bookreview.png)
 
 Via webscraping op bookcrossing.com kan er een lijst van gebruikers worden opgesteld, een lijst van 'journals'/reviews en een lijst van boeken. De lijst van boeken kan verder worden aangevuld met informatie op amazon.com a.d.h.v. de ISBN die van bookcrossing werd afgehaald.
+
+In ons denkbeeldige scenario verzamelt bookcrossing.com dagelijks een grote hoeveelheid data in de vorm van nieuwe gebruikers, nieuwe boeken die worden geregistreerd en van gebruikers die een boek reviewen . Een webserver ontvangt de data die bookcrossing verzameld via een http POST-request en vult deze aan met API-calls of webscraping van Amazon. De aangevulde data wordt nadien verstuurd via POST-request naar NiFi.
+
+NiFi is verantwoordelijk voor het opslaan van de inkomende data op de juiste locatie. Een kopie van ongewijzigde data wordt opgeslagen in hadoop distributed filesystem (HDFS), wat verantwoordelijk is voor het bewaren van een robuuste kopie van de data die bestand is tegen hardwarefalen. Naast het opslaan van onbewerkte gegevens stuurt NiFi de data door naar Kafka a.d.h.v. een <i>publisher</i>. Kafka slaat de data van de publisher op in een tijdelijke buffer, en bevat twee topics:
+
+- boeken die een nieuwe review hebben ontvangen
+- gebruikers die een nieuwe review hebben geplaatst
+
+De data van deze topics zijn beschikbaar voor NiFi om op te <i>subscriben</i> en data die NiFi hiervan ontvangt, worden doorgestuurd naar een MySQL database die tabellen bevat voor gebruikers, boeken en reviews.
+
+In dit voorbeeld heeft bookcrossing een webpagina waar iemand kan zoeken in de boekendatabase en naast het zoekresultaat, worden er ook een aantal boeken aanbevolen. Het uitgewerkte voorbeeld voor de MapReduce functionaliteit is een zoekopdracht naar hoeveel boeken er per uitgeverij zijn uitgebracht. Er is ook een Recommendation system aanwezig dat boeken aanbeveelt op basis van ratings van gelijkaardige gebruikers en/of op basis van ratings van gelijkaardige boeken. Onderstaande afbeelding is een mockup van de webpagina die voor dit project zou gebruikt worden.
+
+![Mockup of bookcrossing data project](bookcrossing_mockup.png)
+(Deze mockup is gebaseerd op functionaliteit aanwezig op bookcrossing.com)
+
+## MapReduce
+
+
+
+## Recommendation System
+
