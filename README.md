@@ -67,6 +67,8 @@ Relationele databases zijn niet geschikt om de petabytes aan data te verwerken d
 
 De kracht van MapReduce is dat data op een grote hoeveelheid (relatief goedkope) machines wordt opgeslagen en elke machine lokaal data-interactie kan doen. Op die manier kan er niet alleen sneller data worden verwerkt, het staat het systeem ook toe om snel meer rekenkracht toe te voegen door middel van extra computers aan te sluiten in de cluster.
 
+![MapReduce high-level overview](MapReduce_architecture.jpg)
+
 ### MapReduce implementatie
 
 Voor dit project zijn er twee mapreduce jobs opgesteld: een job waar het aantal boeken van een uitgeverij wordt teruggeven als nummer, en een andere job waar per uitgeverij een lijst van boektitles wordt teruggegeven. Deze mapreduce jobs staan met elkaar in verbinding wanneer de gebruiker zoekt naar een bepaalde uitgeverij. De webpagina roept dan beide mapreduce jobs aan en toont hiervan de inhoud als resultaat.
@@ -77,10 +79,16 @@ De mapreduce job die de titles van de boeken toont krijgt ook als input 1 regel 
 
 ## Recommendation System
 
+Er is voor dit project gewerkt aan twee recommendation systems: user-item gebaseerd en item-item gebaseerd.
 
+#### User-item based recommendations
+Gebruikers die reviews achter laten bouwen onbewust een profiel op dat vertelt welk soort boeken ze interessant vinden. Door te kijken naar boeken die door de gebruiker (A) goed werd ontvangen kan er worden vergeleken met andere gebruikers die dezelfde of gelijkaardige boeken ook leuk vonden (B). Als gebruiker B een boek leuk vond die gebruiker A nog niet heeft gelezen dan is de kans groot dat gebruiker A dat boek ook leuk zou vinden. A.d.h.v. k-nearest neighbours wordt bepaald hoeveel een bepaalde gebruiker B overeenkomt met gebruiker A. Gebruikers die het meest overeenkomen worden dan gebruikt voor de aanbevelingen te doen.
 
 Demo for user-item recommendation system:
 ![User-item recommendation results](user-item_recommendation.png)
+
+#### Item-item based recommendations
+Wanneer er een grote dataset van boeken is (met reviews) kan er op basis van de reviews een onderverdeling worden gemaakt in genres van boeken. Door Singular Value Decomposition (SVD) toe te passen kan er een gok worden gemaakt welke boeken samenhoren in eenzelfde genre. Dit gebeurt door profielen van gebruikers te matchen met ratingpatronen voor groepen van boeken. Dit werkt het best bij gebruikers die veel boeken hebben reviews gegeven. Na SVD genres heeft ingedeeld in de dataset van boeken kan er voor elk boek worden gekeken naar het genre van dat boek. Boeken die goede reviews hebben ontvangen en in hetzelfde genre zitten als boeken die de gebruiker leuk vond worden dan aangeraden aan de gebruiker.
 
 Demo for item-item recommendation system:
 ![Item-item recommendation results](item-item_recommendation.png)
