@@ -92,3 +92,13 @@ Wanneer er een grote dataset van boeken is (met reviews) kan er op basis van de 
 
 Demo for item-item recommendation system:
 ![Item-item recommendation results](item-item_recommendation.png)
+
+## Reflection
+
+Deze opdracht heeft mijn interesse in Data Mining zeker aangewakkerd. Er zijn op bepaalde momenten problemen voorgevallen bij het starten van de MapReduce Job door het werken met verouderde libraries in Java. Ik heb tijdens programmeren in Java altijd berust op debugging om problemen op te lossen maar bij het ontwikkelen van de MapReduce jobs kon ik alleen maar een kaarsje te branden en hopen dat het werkte. Op een bepaald moment was ik aan het lezen over hoe MapReduce precies werkt met welke Key-Value pairs en plots klikte de logica bij me. Ik denk dat een diepere duik in de interne werking me enorm heeft geholpen met het concept MapReduce onder de knie te krijgen.
+
+Oorspronkelijk was ik op zoek naar verschillende datasets omdat ik niet goed wist of ik met eenzelfde dataset een samenhorend geheel zou kunnen opbouwen. Na wat zoeken en niets vinden wat me aanstond ben ik creatiever gaan denken met de dataset en heb dat idee op Google Draw uitgewerkt in een leuk overzicht van de pipeline. Nadien heb ik in Paint 3D een mockup gemaakt van de website die dit project zou gebruiken en in een NiFi-container de workflow van mijn pipeline gerepliceerd. Door dit spelen met het idee en het in NiFi na te bootsen ondekte ik pas hoe simpel NiFi is om mee te werken. Dat was me voor dit project nog niet opgevallen.
+
+Tijdens het uitschrijven van dit verslag en het maken van de visuals die erbij horen ontdekte ik pas dat er foutjes zaten in de dataset die me oorspronkelijk niet waren opgevallen. Ratings die vaak 0 bleken te zijn en gebruikers die 200 jaar of ouder opgeven als leeftijd zijn allemaal data die tijdens het schrijven nog behandeld zijn in de recommender systems. De resultaten van de item-item based recommendations lijken ook beter te zijn nu de 0-ratings niet meer worden meegenomen.
+
+Uiteindelijk was dit een enorm leuk project en ik vind het spijtig dat ik er in het eerste semester niet aan heb deelgenomen.
