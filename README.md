@@ -16,11 +16,23 @@ Een hypothetische data-pipeline beschrijven met uitgewerkte MapReduce implementa
 
 Voor deze individuele opdracht 'Data Mining' is er gekozen voor een dataset bestaande uit drie tabellen: users, books en ratings. In 2004 is gedurende vier weken data verzameld van gebruikers en gebruikerreviews op de website bookcrossing.com. Nadien is er op Amazon Web Services (AWS) informatie afgehaald over de boeken in de gebruikerreviews. Wanneer AWS geen informatie kon vinden over het boek in de review, werd de review uit de dataset verwijderd. Sinds december 2020 is de data beschikbaar in CSV-formaat op: kaggle.com/arashnic/book-recommendation-dataset.
 
+#### Data visuals
+
+![User age distribution](User_age_distribution.png)
+De gemiddelde gebruiker op bookcrossing.com is tussen de 20 en 35 jaar oud. De leeftijdsverdeling in de dataset wijst er op dat naarmate de leeftijd toe neemt, boekenlezers minder online gaan om boekreviews te delen. 
+
+![Books released per year](Book_releases_per_year.png)
+De dataset is verzameld in 2004, wat duidelijk te zien is in het gebrek aan boeken die na deze periode in de data aanwezig zijn. Boeken die na 2004 zijn gepubliceerd zijn in de dataset beschikbaar indien de datum van eerste druk op voorhand bekend was.
+
+![Rating distibution](Ratings_distribution.png)
+Er zijn overheersend veel reviews die een score van 0 geven. Ik veronderstel dat dit de geschreven reviews zijn die geen bijhorende score hadden ingevuld. Voor het recommendation system worden deze 0-waardes weggelaten
+
 ## Theoretische big data pipeline
 
 De dataset die tijdens dit project wordt gebruikt is al in bruikbaar formaat gebundeld om snel te kunnen starten met data-analyse. In een situatie waar de data nog niet voorbereid is zouden er verschillende aanpakken mogelijk zijn. Een hypothetische data-pipeline gebruik makend van de dataset is zichtbaar in onderstaande afbeelding:
 
 ![Data pipeline gebaseerd op user-boeken reviews](Books_data_pipeline_DM.png)
+![Mockup of NiFi flow](Nifi_mockup.png)
 
 ### Data collection
 De website bookcrossing.com bevat een lijst van gebruikers die in een 'journal' reviews geven aan boeken die ze hebben gelezen. Er is voor elke gebruiker een unieke gebruikersnaam, en gebruikers hebben optioneel opgegeven in welke provincie in welk land ze wonen. Bij elke journal-entry staat een hyperlink naar het boek in kwestie en bij elk boek staat een link naar verschillende webshops (waaronder Amazon) waar meer informatie staat over uitgeverij, auteur, enz.
@@ -67,5 +79,8 @@ De mapreduce job die de titles van de boeken toont krijgt ook als input 1 regel 
 
 
 
+Demo for user-item recommendation system:
+![User-item recommendation results](user-item_recommendation.png)
 
-
+Demo for item-item recommendation system:
+![Item-item recommendation results](item-item_recommendation.png)
