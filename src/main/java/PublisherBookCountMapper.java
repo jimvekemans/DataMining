@@ -1,7 +1,3 @@
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -11,7 +7,7 @@ import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
 
 import java.io.IOException;
-import java.io.StringReader;
+import java.util.Locale;
 
 public class PublisherBookCountMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
 
@@ -19,10 +15,11 @@ public class PublisherBookCountMapper extends MapReduceBase implements Mapper<Lo
 
     public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
         String line = value.toString();
-        CSVParser csvParser = new CSVParserBuilder().withSeparator(';').build();
-        CSVReader csvReader = new CSVReaderBuilder(new StringReader(line)).withCSVParser(csvParser).build();
-        String[] bookParts = csvReader.readNext();
-        Text publisher = new Text(bookParts[4]);
+        String[] bookParts = line.split(";");
+        Text publisher = new Text("");
+        if(bookParts.length >= 5){
+            publisher = new Text(bookParts[4].toLowerCase(Locale.ROOT));
+        }
         output.collect(publisher, one);
     }
 }
