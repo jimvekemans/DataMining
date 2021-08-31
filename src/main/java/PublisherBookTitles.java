@@ -1,33 +1,41 @@
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-public class PublisherBookCount extends Configured implements Tool {
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Iterator;
+
+public class PublisherBookTitles extends Configured implements Tool {
 
     public static void main(String[] args) throws Exception {
-        int res = ToolRunner.run(new Configuration(), new PublisherBookCount(), args);
+        int res = ToolRunner.run(new Configuration(), new PublisherBookTitles(), args);
         System.exit(res);
     }
 
     public int run(String[] args) throws Exception {
-        JobConf conf = new JobConf(getConf(), PublisherBookCount.class);
+        JobConf conf = new JobConf(getConf(), PublisherBookTitles.class);
         conf.setJobName("publisherbookcount");
-        conf.setJarByClass(PublisherBookCount.class);
+        conf.setJarByClass(PublisherBookTitles.class);
 
         conf.setOutputKeyClass(Text.class);
-        conf.setOutputValueClass(IntWritable.class);
+        conf.setOutputValueClass(Text.class);
 
         conf.setMapOutputKeyClass(Text.class);
-        conf.setMapOutputValueClass(IntWritable.class);
+        conf.setMapOutputValueClass(Text.class);
 
-        conf.setMapperClass(PublisherBookCountMapper.class);
-        conf.setCombinerClass(PublisherBookCountReducer.class);
-        conf.setReducerClass(PublisherBookCountReducer.class);
+        conf.setMapperClass(PublisherBookTitleMapper.class);
+        conf.setCombinerClass(PublisherBookTitleReducer.class);
+        conf.setReducerClass(PublisherBookTitleReducer.class);
 
         conf.setInputFormat(TextInputFormat.class);
         conf.setOutputFormat(TextOutputFormat.class);

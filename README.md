@@ -1,7 +1,5 @@
 # Project Herexamen Data Mining Jim Vekemans
 
-[TOC]
-
 ## Environment setup
 1. Build [Hadoop Docker cluster](https://github.com/big-data-europe/docker-hadoop/archive/refs/tags/2.0.0-hadoop3.2.1-java8.zip)
 2. Mount files from this repo in fastai container. <i>*Replace {DIRECTORY} with path where you cloned this repo*</i> ```docker run --init -it --rm --gpus all -p 8888:8888 -v {DIRECTORY}:/workspace/code fastdotai/fastai:2.2.5 ./run_jupyter.sh```
@@ -33,7 +31,7 @@ De website bookcrossing.com bevat een lijst van gebruikers die in een 'journal' 
 
 In ons denkbeeldige scenario verzamelt bookcrossing.com dagelijks een grote hoeveelheid data in de vorm van nieuwe gebruikers, nieuwe boeken die worden geregistreerd en van gebruikers die een boek reviewen. Een webserver ontvangt de data die bookcrossing verzameld via een http POST-request en vult deze aan met informatie die a.d.h.v. API-calls of webscraping op Amazon werd gevonden bij het zoeken naar de ISBN-waarde die van bookcrossing werd afgehaald. De aangevulde data wordt nadien verstuurd via POST-request naar NiFi.
 
-### Data Storage
+### Data storage
 
 NiFi is verantwoordelijk voor het opslaan van de inkomende data op de juiste locatie. Een kopie van ongewijzigde data wordt opgeslagen in hadoop distributed filesystem (HDFS), wat verantwoordelijk is voor het bewaren van een robuuste kopie van de data die bestand is tegen hardwarefalen. Naast het opslaan van onbewerkte gegevens stuurt NiFi de data door naar Kafka a.d.h.v. een <i>publisher</i>. Kafka slaat de data van de publisher op in een tijdelijke buffer, en bevat twee topics:
 
@@ -51,7 +49,23 @@ In dit voorbeeld heeft bookcrossing een webpagina waar iemand kan zoeken in de b
 
 ## MapReduce
 
+### Waarom MapReduce?
 
+Relationele databases zijn niet geschikt om de petabytes aan data te verwerken die bij Big Data aan bod komen. Niet enkel komen er enorm veel problemen opduiken voor een infrastructuur te bouwen die veilig met zulke omvang van data kan omgaan, er is al snel een supercomputer nodig om niet dagenlang te moeten wachten bij elke data-interactie.
+
+De kracht van MapReduce is dat data op een grote hoeveelheid (relatief goedkope) machines wordt opgeslagen en elke machine lokaal data-interactie kan doen. Op die manier kan er niet alleen sneller data worden verwerkt, het staat het systeem ook toe om snel meer rekenkracht toe te voegen door middel van extra computers aan te sluiten in de cluster.
+
+### MapReduce implementatie
+
+Voor dit project zijn er twee mapreduce jobs opgesteld: een job waar het aantal boeken van een uitgeverij wordt teruggeven als nummer, en een andere job waar per uitgeverij een lijst van boektitles wordt teruggegeven. Deze mapreduce jobs staan met elkaar in verbinding wanneer de gebruiker zoekt naar een bepaalde uitgeverij. De webpagina roept dan beide mapreduce jobs aan en toont hiervan de inhoud als resultaat.
+
+De mapreduce job die het aantal boeken toont krijgt als input 1 regel van de dataset gemarkeerd met een LongWritable die de index aangeeft. De Map-functie geeft hier als resultaat altijd een Key-Value paar met Key: Text (naam uitgeverij) en Value: een IntWritable van 1 terug (omdat er per regel maar 1 boek is van 1 uitgeverij). De Reduce-functie combineert per Key/uitgeverij alle Values om de som van boeken te bekomen.
+
+De mapreduce job die de titles van de boeken toont krijgt ook als input 1 regel van de dataset gemarkeerd met een LongWritable die de index aangeeft. De Map-functie geeft hier als resultaat een Key-Value paar met Key: Text (naam uitgeverij) en Value: Text (titel van het boek). De Reduce-functie combineert per Key/uitgeverij alle Values in een lange string die de titles opsomt gesplitst door een ';'.
 
 ## Recommendation System
+
+
+
+
 
